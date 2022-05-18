@@ -17,7 +17,7 @@ const Routes = (): JSX.Element => {
   return (
     <Container>
       <NavigationContainer>
-        {true ? <MainRoutes /> : <AuthenticationRoutes />}
+        {user.id ? <MainRoutes /> : <AuthenticationRoutes />}
       </NavigationContainer>
     </Container>
   );

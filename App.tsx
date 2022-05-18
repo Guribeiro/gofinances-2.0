@@ -1,14 +1,11 @@
+import 'intl';
+import 'intl/locale-data/jsonp/en';
 import React, { useState, useEffect, useCallback } from 'react';
-import { ThemeProvider } from '@shared/hooks/theme';
-import { ScreenProvider } from 'responsive-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { StatusBar, View } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 
-import { AuthenticationProvider } from '@modules/authentication/hooks/authentication';
-
-import { StatusBar, View } from 'react-native';
-
-import Routes from '@shared/routes';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { ScreenProvider } from 'responsive-native';
 
 import { loadAsync } from 'expo-font';
 import {
@@ -17,6 +14,9 @@ import {
   Poppins_500Medium,
   Poppins_700Bold,
 } from '@expo-google-fonts/poppins';
+
+import AppProvider from '@shared/hooks';
+import Routes from '@shared/routes';
 
 const App = (): JSX.Element => {
   const [appIsReady, setAppIsReady] = useState(false);
@@ -61,11 +61,9 @@ const App = (): JSX.Element => {
           backgroundColor="transparent"
           barStyle="dark-content"
         />
-        <ThemeProvider>
-          <AuthenticationProvider>
-            <Routes />
-          </AuthenticationProvider>
-        </ThemeProvider>
+        <AppProvider>
+          <Routes />
+        </AppProvider>
       </ScreenProvider>
     </SafeAreaProvider>
   );
