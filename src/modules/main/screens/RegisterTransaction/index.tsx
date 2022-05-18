@@ -12,15 +12,15 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 import { Category } from '@shared/utils/categories';
 
-import Spacer from '@modules/components/Spacer';
-import Input from '@modules/components/Inputs/InputText';
-import InputMoney from '@modules/components/Inputs/InputMoney';
-import Button from '@modules/components/Button';
+import Spacer from '@modules/main/components/Spacer';
+import Input from '@modules/main/components/Inputs/InputText';
+import InputMoney from '@modules/main/components/Inputs/InputMoney';
+import Button from '@modules/main/components/Button';
 
-import Header from '@modules/components/Header';
+import Header from '@modules/main/components/Header';
 
-import TransactionTypeSwitch from '@modules/components/TransactionTypeSwitch';
-import CategorySelectButton from '@modules/components/CategorySelectButton';
+import TransactionTypeSwitch from '@modules/main/components/TransactionTypeSwitch';
+import CategorySelectButton from '@modules/main/components/CategorySelectButton';
 import CategorySelect from '../CategorySelect';
 
 import { Container, Form, Field } from './styles';

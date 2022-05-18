@@ -17,15 +17,15 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 import { useAuthentication } from '@modules/authentication/hooks/authentication';
 
-import Scroll from '@modules/components/Scroll';
-import Spacer from '@modules/components/Spacer';
-import Header from '@modules/components/Header';
+import Scroll from '@modules/main/components/Scroll';
+import Spacer from '@modules/main/components/Spacer';
+import Header from '@modules/main/components/Header';
 
-import Button from '@modules/components/Button';
-import ButtonSignin from '@modules/components/ButtonSignin';
+import Button from '@modules/main/components/Button';
+import ButtonSignin from '@modules/main/components/ButtonSignin';
 
-import Input from '@modules/components/Inputs/InputText';
-import InputPassword from '@modules/components/Inputs/InputPassword';
+import Input from '@modules/main/components/Inputs/InputText';
+import InputPassword from '@modules/main/components/Inputs/InputPassword';
 
 import AppleIcon from '../../assets/apple-icon.svg';
 import GoogleIcon from '../../assets/google-icon.svg';

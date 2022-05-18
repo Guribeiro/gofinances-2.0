@@ -1,4 +1,4 @@
-import Button from '@modules/components/Button';
+import Button from '@modules/main/components/Button';
 import { useTheme } from '@shared/hooks/theme';
 
 import { RootAuthenticationParamsList } from '@modules/authentication/routes';

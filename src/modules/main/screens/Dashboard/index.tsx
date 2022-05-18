@@ -1,9 +1,9 @@
 import { TouchableOpacity } from 'react-native';
 import React from 'react';
-import HighlightCard from '@modules/components/HighlightCard';
+import HighlightCard from '@modules/main/components/HighlightCard';
 import TransactionCard, {
   TransactionsCardProps,
-} from '@modules/components/TransactionCard';
+} from '@modules/main/components/TransactionCard';
 
 import {
   Container,

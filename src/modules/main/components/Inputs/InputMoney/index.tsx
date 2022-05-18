@@ -1,7 +1,7 @@
 import React from 'react';
 import { MaskedTextInputProps } from 'react-native-mask-text';
 import { FieldError } from 'react-hook-form';
-import TextError from '@modules/components/Inputs/TextError';
+import TextError from '@modules/main/components/Inputs/TextError';
 import {
   Container,
   InputLabel,

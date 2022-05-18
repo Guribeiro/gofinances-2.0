@@ -1,5 +1,5 @@
-import Header from '@modules/components/Header';
-import Button from '@modules/components/Button';
+import Header from '@modules/main/components/Header';
+import Button from '@modules/main/components/Button';
 import { categories, Category } from '@shared/utils/categories';
 import { useCallback } from 'react';
 import {

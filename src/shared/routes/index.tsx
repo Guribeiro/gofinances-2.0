@@ -1,6 +1,9 @@
 import { NavigationContainer } from '@react-navigation/native';
 
 import AuthenticationRoutes from '@modules/authentication/routes';
+import MainRoutes from '@modules/main/routes';
+
+import { useAuthentication } from '@modules/authentication/hooks/authentication';
 
 import styled from 'styled-components/native';
 
@@ -10,10 +13,11 @@ const Container = styled.View`
 `;
 
 const Routes = (): JSX.Element => {
+  const { user } = useAuthentication();
   return (
     <Container>
       <NavigationContainer>
-        <AuthenticationRoutes />
+        {true ? <MainRoutes /> : <AuthenticationRoutes />}
       </NavigationContainer>
     </Container>
   );

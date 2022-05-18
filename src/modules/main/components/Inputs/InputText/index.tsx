@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextInputProps } from 'react-native';
 import { FieldError } from 'react-hook-form';
-import TextError from '@modules/components/Inputs/TextError';
+import TextError from '@modules/main/components/Inputs/TextError';
 import { Container, InputText, InputLabel, TextInputRow } from './styles';
 
 interface InputProps extends TextInputProps {

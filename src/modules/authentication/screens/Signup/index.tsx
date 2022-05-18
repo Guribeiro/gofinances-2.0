@@ -9,13 +9,13 @@ import { RootAuthenticationParamsList } from '@modules/authentication/routes';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import Scroll from '@modules/components/Scroll';
-import Spacer from '@modules/components/Spacer';
-import Header from '@modules/components/Header';
+import Scroll from '@modules/main/components/Scroll';
+import Spacer from '@modules/main/components/Spacer';
+import Header from '@modules/main/components/Header';
 
-import Button from '@modules/components/Button';
+import Button from '@modules/main/components/Button';
 
-import Input from '@modules/components/Inputs/InputText';
+import Input from '@modules/main/components/Inputs/InputText';
 
 import { useCallback } from 'react';
 import { Container, Body, Footer, Form } from './styles';
