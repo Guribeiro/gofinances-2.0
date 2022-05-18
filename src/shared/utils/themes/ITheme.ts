@@ -22,6 +22,7 @@ export default interface ITheme {
       title: string;
       text: string;
       background: string;
+      white: string;
     };
   };
 }

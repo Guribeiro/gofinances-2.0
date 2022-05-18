@@ -21,6 +21,7 @@ export const dark = {
     title: '#363F5F',
     text: '#E9EDEE',
     background: '#141517',
+    white: '#FFFFFF',
   },
 } as const;
 
