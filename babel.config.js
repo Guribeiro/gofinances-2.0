@@ -13,7 +13,7 @@ module.exports = function(api) {
       [
         'module-resolver',
         {
-          extensions: ['.js', '.jsx', '.es', '.es6', '.mjs', '.ts', '.tsx', '.svg', '.png'],
+          extensions: ['.js', '.jsx', '.es', '.es6', '.mjs', '.ts', '.tsx', '.svg', '.png', '.cjs'],
           root: ['./'],
           alias: {
             '@modules': './src/modules',

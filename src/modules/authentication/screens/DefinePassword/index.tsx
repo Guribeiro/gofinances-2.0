@@ -1,6 +1,7 @@
 import { KeyboardAvoidingView, Platform } from 'react-native';
 
 import { Controller, useForm } from 'react-hook-form';
+import { Alert } from 'react-native';
 
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -20,7 +21,8 @@ import Button from '@modules/main/components/Button';
 
 import InputPassword from '@modules/main/components/Inputs/InputPassword';
 
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
+import { useAuthentication } from '@modules/authentication/hooks/authentication';
 import { Container, Body, Footer, Form } from './styles';
 
 type DefinePasswordScreenProps = NativeStackNavigationProp<
@@ -43,8 +45,11 @@ const schema = Yup.object().shape({
   ),
 });
 const DefinePassword = (): JSX.Element => {
+  const [loading, setLoading] = useState(false);
+
   const { goBack } = useNavigation<DefinePasswordScreenProps>();
   const { params } = useRoute();
+  const { signUp } = useAuthentication();
 
   const { name, email } = params as DefinePasswordScreenParamsList;
 
@@ -57,10 +62,20 @@ const DefinePassword = (): JSX.Element => {
   });
 
   const onSubmit = useCallback(
-    ({ password, passwordConfirmation }: FormData) => {
-      console.log({ password, passwordConfirmation });
+    async ({ password }: FormData) => {
+      try {
+        setLoading(true);
+        await signUp({
+          name,
+          email,
+          password,
+        });
+      } catch (error) {
+        Alert.alert(error as string);
+        setLoading(false);
+      }
     },
-    [],
+    [email, name, signUp],
   );
 
   return (
@@ -108,7 +123,9 @@ const DefinePassword = (): JSX.Element => {
               <Spacer size={16} />
             </Form>
             <Footer>
-              <Button onPress={handleSubmit(onSubmit)}>Log in</Button>
+              <Button loading={loading} onPress={handleSubmit(onSubmit)}>
+                Log in
+              </Button>
             </Footer>
           </Body>
         </Scroll>

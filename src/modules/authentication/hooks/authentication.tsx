@@ -1,25 +1,53 @@
+/* eslint-disable consistent-return */
 import {
   createContext,
   ReactNode,
   useCallback,
   useContext,
+  useEffect,
   useState,
 } from 'react';
 import * as AuthSession from 'expo-auth-session';
 import * as AppleAuthentication from 'expo-apple-authentication';
+import {
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+} from 'firebase/auth';
+import { auth, database } from '@shared/services/firebase';
+
 import { CLIENT_ID, REDIRECT_URI } from '@env';
+import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 
 type User = {
   id: string;
+  info: Info;
+};
+
+type Info = {
   name: string;
   email: string;
   photo?: string;
 };
 
+type SignInWithCredentialsProps = {
+  email: string;
+  password: string;
+};
+
+type SignUpProps = {
+  name: string;
+  email: string;
+  password: string;
+  photo?: string;
+};
+
 type AuthenticationContextData = {
   user: User;
+  signUp(props: SignUpProps): Promise<void>;
   signInWithGoogle(): Promise<void>;
   signInWithApple(): Promise<void>;
+  signInWithCredentials(props: SignInWithCredentialsProps): Promise<void>;
 };
 
 type Type = 'success' | 'dismiss';
@@ -51,6 +79,34 @@ const AuthenticationProvider = ({
 }: AuthenticationProviderProps): JSX.Element => {
   const [user, setUser] = useState<User>({} as User);
 
+  const signUp = useCallback(
+    async ({ name, email, password, photo }: SignUpProps) => {
+      try {
+        const { user: signedUser } = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password,
+        );
+
+        const userPhoto =
+          photo || `https://ui-avatars.com/api/?name=${name}&length=1`;
+
+        const docUserRef = doc(database, 'users', signedUser.uid);
+
+        const userInfo: Info = {
+          name,
+          email,
+          photo: userPhoto,
+        };
+
+        await setDoc(docUserRef, userInfo);
+      } catch (error) {
+        throw new Error(error as string);
+      }
+    },
+    [],
+  );
+
   const signInWithGoogle = useCallback(async () => {
     try {
       const RESPONSE_TYPE = 'token';
@@ -70,11 +126,34 @@ const AuthenticationProvider = ({
         const { id, email, name, picture } =
           (await response.json()) as UserInfo;
 
-        setUser({
-          id,
-          email,
-          name,
-          photo: picture,
+        const docUserRef = doc(database, 'users', id);
+
+        onSnapshot(docUserRef, docData => {
+          if (docData.exists()) {
+            const docUserInfo = docData.data() as UserInfo;
+
+            const userAuthenticated: User = {
+              id,
+              info: docUserInfo,
+            };
+
+            setUser(userAuthenticated);
+          } else {
+            setDoc(docUserRef, {
+              email,
+              name,
+              photo: picture,
+            }).then(() => {
+              setUser({
+                id,
+                info: {
+                  email,
+                  name,
+                  photo: picture,
+                },
+              });
+            });
+          }
         });
       }
     } catch (error) {
@@ -91,25 +170,126 @@ const AuthenticationProvider = ({
         ],
       });
 
+      const docUserRef = doc(database, 'users', credentials.user);
+
       if (credentials) {
         const name = credentials.fullName!.givenName!;
 
-        const userAuthenticatedWithApple: User = {
-          id: credentials.user,
-          email: credentials.email!,
-          name,
-          photo: `https://ui-avatars.com/api/?name=${name}&length=1`,
-        };
-        setUser(userAuthenticatedWithApple);
+        const photo = `https://ui-avatars.com/api/?name=${name}&length=1`;
+
+        onSnapshot(docUserRef, docData => {
+          if (docData.exists()) {
+            const docUserInfo = docData.data() as UserInfo;
+
+            const userAuthenticated: User = {
+              id: credentials.user,
+              info: docUserInfo,
+            };
+
+            setUser(userAuthenticated);
+          } else {
+            const authenticatedUserInfo: Info = {
+              email: credentials.email!,
+              name,
+              photo,
+            };
+
+            setDoc(docUserRef, authenticatedUserInfo).then(() => {
+              setUser({
+                id: credentials.user,
+                info: authenticatedUserInfo,
+              });
+            });
+          }
+        });
       }
     } catch (error) {
       throw new Error(error as string);
     }
   }, []);
 
+  const signInWithCredentials = useCallback(
+    async ({ email, password }: SignInWithCredentialsProps) => {
+      try {
+        const { user: signedUser } = await signInWithEmailAndPassword(
+          auth,
+          email,
+          password,
+        );
+
+        const docUserRef = doc(database, 'users', signedUser.uid);
+
+        onSnapshot(docUserRef, docData => {
+          const docUserInfo = docData.data() as UserInfo;
+
+          const userAuthenticated: User = {
+            id: signedUser.uid,
+            info: docUserInfo,
+          };
+
+          setUser(userAuthenticated);
+        });
+      } catch (error) {
+        throw new Error(error as string);
+      }
+    },
+    [],
+  );
+
+  const loadPersistedAuth = useCallback(() => {
+    onAuthStateChanged(auth, observedUser => {
+      if (observedUser) {
+        const name = observedUser.displayName!;
+
+        const photo =
+          observedUser.photoURL ||
+          `https://ui-avatars.com/api/?name=${name}&length=1`;
+
+        const userAuthenticated: User = {
+          id: observedUser.uid,
+          info: {
+            name,
+            email: observedUser.email!,
+            photo,
+          },
+        };
+        setUser(userAuthenticated);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    loadPersistedAuth();
+  }, [loadPersistedAuth]);
+
+  useEffect(() => {
+    if (!user.id) {
+      return;
+    }
+
+    const docUserRef = doc(database, 'users', user.id);
+
+    const unsubscribe = onSnapshot(docUserRef, docData => {
+      const docUserInfo = docData.data() as Info;
+
+      setUser({
+        id: user.id,
+        info: docUserInfo,
+      });
+    });
+
+    return () => unsubscribe();
+  }, [user]);
+
   return (
     <AuthenticationContext.Provider
-      value={{ user, signInWithGoogle, signInWithApple }}
+      value={{
+        user,
+        signUp,
+        signInWithGoogle,
+        signInWithApple,
+        signInWithCredentials,
+      }}
     >
       {children}
     </AuthenticationContext.Provider>

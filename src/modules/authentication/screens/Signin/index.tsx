@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import {
   Alert,
   TouchableOpacity,
@@ -10,12 +10,12 @@ import { Controller, useForm } from 'react-hook-form';
 
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootAuthenticationParamsList } from '@modules/authentication/routes';
 
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { useAuthentication } from '@modules/authentication/hooks/authentication';
+import { RootAuthenticationParamsList } from '@modules/authentication/routes';
 
 import Scroll from '@modules/main/components/Scroll';
 import Spacer from '@modules/main/components/Spacer';
@@ -26,6 +26,8 @@ import ButtonSignin from '@modules/main/components/ButtonSignin';
 
 import Input from '@modules/main/components/Inputs/InputText';
 import InputPassword from '@modules/main/components/Inputs/InputPassword';
+
+import { verifyCodeError } from '@shared/utils/errors/firebase';
 
 import AppleIcon from '../../assets/apple-icon.svg';
 import GoogleIcon from '../../assets/google-icon.svg';
@@ -64,7 +66,10 @@ const schema = Yup.object().shape({
 });
 
 const Signin = (): JSX.Element => {
-  const { signInWithGoogle, signInWithApple } = useAuthentication();
+  const [loading, setLoading] = useState(false);
+
+  const { signInWithGoogle, signInWithApple, signInWithCredentials } =
+    useAuthentication();
   const { goBack, navigate } = useNavigation<SigninScreenProps>();
 
   const { control, handleSubmit } = useForm<FormData>({
@@ -75,30 +80,42 @@ const Signin = (): JSX.Element => {
     resolver: yupResolver(schema),
   });
 
-  const handleSignInWithEmailAndPassword = useCallback(
+  const handleSignInWithCredentials = useCallback(
     async ({ email, password }: FormData) => {
       try {
-        console.log({ email, password });
+        setLoading(true);
+        await signInWithCredentials({
+          email,
+          password,
+        });
       } catch (error) {
-        console.log(error);
+        const message = verifyCodeError(error);
+        Alert.alert(message);
+        setLoading(false);
       }
     },
-    [],
+    [signInWithCredentials],
   );
 
   const handleSignInWithGoogle = useCallback(async () => {
     try {
+      setLoading(true);
       await signInWithGoogle();
     } catch (error) {
-      Alert.alert(error as string);
+      const message = verifyCodeError(error);
+      Alert.alert(message);
+      setLoading(false);
     }
   }, [signInWithGoogle]);
 
   const handleSignInWithApple = useCallback(async () => {
     try {
+      setLoading(true);
       await signInWithApple();
     } catch (error) {
-      Alert.alert(error as string);
+      const message = verifyCodeError(error);
+      Alert.alert(message);
+      setLoading(false);
     }
   }, [signInWithApple]);
 
@@ -182,7 +199,10 @@ const Signin = (): JSX.Element => {
               </ForgotPasswordContainer>
             </Form>
             <Footer>
-              <Button onPress={handleSubmit(handleSignInWithEmailAndPassword)}>
+              <Button
+                loading={loading}
+                onPress={handleSubmit(handleSignInWithCredentials)}
+              >
                 Log in
               </Button>
               <Spacer size={32} />
