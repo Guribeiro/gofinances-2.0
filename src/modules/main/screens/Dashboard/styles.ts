@@ -2,11 +2,11 @@ import styled from 'styled-components/native';
 import { Text } from '@shared/components/Text';
 import Constants from 'expo-constants';
 
+import { Transaction } from '@modules/main/hooks/transactions';
+
 import { FlatList, FlatListProps } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
-
-import { TransactionListProps } from '.';
 
 const { statusBarHeight } = Constants;
 
@@ -52,7 +52,7 @@ export const UserGreeting = styled(Text)`
 
 export const Icon = styled(Feather)`
   font-size: ${({ theme }) => theme.screen.rem(1.5, true)}px;
-  color: ${({ theme }) => theme.palett.colors.attention};
+  color: ${({ theme }) => theme.palett.colors.shape};
 `;
 
 export const Title = styled(Text)`
@@ -70,9 +70,7 @@ export const Transactions = styled.View`
 `;
 
 export const TransactionList = styled(
-  FlatList as new (
-    props: FlatListProps<TransactionListProps>,
-  ) => FlatList<TransactionListProps>,
+  FlatList as new (props: FlatListProps<Transaction>) => FlatList<Transaction>,
 ).attrs(({ theme }) => ({
   showsVerticalScrollIndicator: false,
   contentContainerStyle: {

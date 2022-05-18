@@ -1,3 +1,5 @@
+import { Transaction } from '@modules/main/hooks/transactions';
+
 import {
   Container,
   Title,
@@ -15,7 +17,7 @@ type CategoryProps = {
 };
 
 export type TransactionsCardProps = {
-  title: string;
+  name: string;
   amount: string;
   category: CategoryProps;
   date: string;
@@ -23,24 +25,26 @@ export type TransactionsCardProps = {
 };
 
 type Data = {
-  data: TransactionsCardProps;
+  data: Transaction;
 };
 
 const TransactionCard = ({ data }: Data): JSX.Element => {
   return (
     <Container>
-      <Title>{data.title}</Title>
+      <Title>{data.name}</Title>
 
-      <Amount type={data.type}>
-        {data.type === 'income' ? '+' : '-'} {data.amount}
+      <Amount type={data.transactionType}>
+        {data.transactionType === 'income' ? '+' : '-'} {data.amountFormatted}
       </Amount>
 
       <Footer>
         <Category>
-          <Icon name="dollar-sign" />
-          <CategoryName>{data.category.name}</CategoryName>
+          <Icon name={data.category.icon} color={data.category.color} />
+          <CategoryName color={data.category.color}>
+            {data.category.name}
+          </CategoryName>
         </Category>
-        <Date>{data.date}</Date>
+        <Date>{data.createdAtFormatted}</Date>
       </Footer>
     </Container>
   );

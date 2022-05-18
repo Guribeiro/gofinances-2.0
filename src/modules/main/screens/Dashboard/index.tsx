@@ -1,10 +1,17 @@
-import { TouchableOpacity } from 'react-native';
 import React from 'react';
+import { TouchableOpacity } from 'react-native';
+import { DrawerActions, useNavigation } from '@react-navigation/native';
+
+import { DrawerNavigationProp } from '@react-navigation/drawer';
+import { RootMainParamsList } from '@modules/main/routes';
+
 import HighlightCard from '@modules/main/components/HighlightCard';
 import TransactionCard, {
   TransactionsCardProps,
 } from '@modules/main/components/TransactionCard';
 
+import { useAuthentication } from '@modules/authentication/hooks/authentication';
+import { useTransactions } from '@modules/main/hooks/transactions';
 import {
   Container,
   Header,
@@ -25,53 +32,16 @@ export type TransactionListProps = TransactionsCardProps & {
   id: string;
 };
 
+type DashboardScreenProps = DrawerNavigationProp<
+  RootMainParamsList,
+  'Dashboard'
+>;
+
 const Dashboard = (): JSX.Element => {
-  const transactions: Array<TransactionListProps> = [
-    {
-      id: '1',
-      title: 'Desenvolvimento de site',
-      amount: 'R$12.000,00',
-      category: {
-        icon: 'dollar-sign',
-        name: 'Vendas',
-      },
-      date: '16/05/2022',
-      type: 'income',
-    },
-    {
-      id: '2',
-      title: 'Desenvolvimento de site',
-      amount: 'R$12.000,00',
-      category: {
-        icon: 'dollar-sign',
-        name: 'Vendas',
-      },
-      date: '16/05/2022',
-      type: 'outcome',
-    },
-    {
-      id: '3',
-      title: 'Desenvolvimento de site',
-      amount: 'R$12.000,00',
-      category: {
-        icon: 'dollar-sign',
-        name: 'Vendas',
-      },
-      date: '16/05/2022',
-      type: 'income',
-    },
-    {
-      id: '4',
-      title: 'Desenvolvimento de site',
-      amount: 'R$12.000,00',
-      category: {
-        icon: 'dollar-sign',
-        name: 'Vendas',
-      },
-      date: '16/05/2022',
-      type: 'outcome',
-    },
-  ];
+  const { dispatch } = useNavigation<DashboardScreenProps>();
+  const { user } = useAuthentication();
+  const { transactions } = useTransactions();
+
   return (
     <Container>
       <Header>
@@ -79,17 +49,19 @@ const Dashboard = (): JSX.Element => {
           <Info>
             <Photo
               source={{
-                uri: 'https://avatars.githubusercontent.com/u/50778163?v=4',
+                uri: user.info.photo,
               }}
             />
             <User>
               <UserGreeting>Olá, </UserGreeting>
-              <UserName>Gustavo</UserName>
+              <UserName>{user.info.name}</UserName>
             </User>
           </Info>
 
-          <TouchableOpacity onPress={() => console.log('pressed')}>
-            <Icon name="power" />
+          <TouchableOpacity
+            onPress={() => dispatch(DrawerActions.openDrawer())}
+          >
+            <Icon name="menu" />
           </TouchableOpacity>
         </UserInfo>
       </Header>

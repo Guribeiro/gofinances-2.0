@@ -2,9 +2,17 @@ import styled from 'styled-components/native';
 import { Feather } from '@expo/vector-icons';
 import { Text } from '@shared/components/Text';
 
-interface AmountProps {
+type AmountProps = {
   type: 'income' | 'outcome';
-}
+};
+
+type IconProps = {
+  color?: string;
+};
+
+type CategoryNameProps = {
+  color?: string;
+};
 
 export const Container = styled.View`
   padding: ${({ theme }) => theme.screen.rem(1.125)}px;
@@ -38,16 +46,16 @@ export const Category = styled.View`
   align-items: center;
 `;
 
-export const CategoryName = styled(Text)`
+export const CategoryName = styled(Text)<CategoryNameProps>`
   font-size: ${({ theme }) => theme.screen.rem(0.875, true)}px;
-  color: ${({ theme }) => theme.palett.colors.text};
+  color: ${({ theme, color }) => color || theme.palett.colors.text};
   font-family: ${({ theme }) => theme.palett.fonts.regular};
 `;
 
 export const Date = styled(CategoryName)``;
 
-export const Icon = styled(Feather)`
+export const Icon = styled(Feather)<IconProps>`
   font-size: ${({ theme }) => theme.screen.rem(1.25, true)}px;
-  color: ${({ theme }) => theme.palett.colors.text};
+  color: ${({ theme, color }) => color || theme.palett.colors.text};
   margin-right: ${({ theme }) => theme.screen.rem(0.75, true)}px;
 `;
