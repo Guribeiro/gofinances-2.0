@@ -1,5 +1,7 @@
 import styled from 'styled-components/native';
 
+import { DrawerContentScrollView } from '@react-navigation/drawer';
+
 export const Container = styled.View`
   height: 100%;
   flex: 1;
@@ -18,4 +20,8 @@ export const DrawerHeader = styled.View`
 export const DrawerText = styled.Text`
   font-size: ${({ theme }) => theme.screen.rem(1.125, true)}px;
   color: ${({ theme }) => theme.palett.colors.text};
+`;
+
+export const DrawerScrollView = styled(DrawerContentScrollView)`
+  padding: 0 ${({ theme }) => theme.screen.rem(1)}px;
 `;

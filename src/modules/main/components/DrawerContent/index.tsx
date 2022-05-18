@@ -1,14 +1,11 @@
-import {
-  DrawerContentComponentProps,
-  DrawerContentScrollView,
-} from '@react-navigation/drawer';
+import { DrawerContentComponentProps } from '@react-navigation/drawer';
 
 import DrawerItem from './DrawerItem';
 import Spacer from '../Spacer';
 
 import Header from './Header';
 
-import { Container } from './styles';
+import { Container, DrawerScrollView } from './styles';
 
 const DrawerContent = ({
   navigation,
@@ -16,13 +13,19 @@ const DrawerContent = ({
 }: DrawerContentComponentProps): JSX.Element => {
   return (
     <Container>
-      <DrawerContentScrollView {...rest}>
+      <DrawerScrollView {...rest}>
         <Header navigation={navigation} />
         <Spacer size={30} />
         <DrawerItem
           label="Início"
           icon="home"
           onPress={() => navigation.navigate('BillsRoutes')}
+        />
+
+        <DrawerItem
+          label="Adicionar nova transação"
+          icon="plus"
+          onPress={() => navigation.navigate('RegisterTransaction')}
         />
 
         <DrawerItem
@@ -46,7 +49,7 @@ const DrawerContent = ({
           icon="power"
           onPress={() => console.log('signout')}
         />
-      </DrawerContentScrollView>
+      </DrawerScrollView>
     </Container>
   );
 };
