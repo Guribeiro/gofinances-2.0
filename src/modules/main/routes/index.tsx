@@ -6,14 +6,15 @@ import SettingsRoutes from '@modules/settings/routes';
 
 import Dashboard from '../screens/Dashboard';
 import DrawerContent from '../components/DrawerContent';
+import RegisterTransaction from '../screens/RegisterTransaction';
 
-export type DrawerNavigatorParamsList = {
+export type RootMainParamsList = {
   Dashboard: undefined;
+  RegisterTransaction: undefined;
   SettingsRoutes: undefined;
 };
 
-const { Navigator, Screen } =
-  createDrawerNavigator<DrawerNavigatorParamsList>();
+const { Navigator, Screen } = createDrawerNavigator<RootMainParamsList>();
 
 const MainRoutes = (): JSX.Element => {
   const { theme } = useTheme();
@@ -41,6 +42,8 @@ const MainRoutes = (): JSX.Element => {
       <Screen name="Dashboard" component={Dashboard} />
 
       <Screen name="SettingsRoutes" component={SettingsRoutes} />
+
+      <Screen name="RegisterTransaction" component={RegisterTransaction} />
     </Navigator>
   );
 };

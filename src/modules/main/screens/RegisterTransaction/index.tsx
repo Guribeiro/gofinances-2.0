@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { TouchableWithoutFeedback, Keyboard, Alert } from 'react-native';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -10,8 +10,14 @@ import { useForm, Controller } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { Category } from '@shared/utils/categories';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useTransactions } from '@modules/main/hooks/transactions';
 
+import { Category } from '@shared/utils/categories';
+import { verifyCodeError } from '@shared/utils/errors/firebase';
+
+import { RootMainParamsList } from '@modules/main/routes';
 import Spacer from '@modules/main/components/Spacer';
 import Input from '@modules/main/components/Inputs/InputText';
 import InputMoney from '@modules/main/components/Inputs/InputMoney';
@@ -39,11 +45,24 @@ const schema = Yup.object().shape({
     .notOneOf(['0'], 'Valor inválido'),
 });
 
+type RegisterTransactionScreenProps = NativeStackNavigationProp<
+  RootMainParamsList,
+  'RegisterTransaction'
+>;
+
 const RegisterTransaction = (): JSX.Element => {
   const INITIAL_VALUE = -1000;
   const FINAL_VALUE = 0;
 
-  const { control, handleSubmit, setValue } = useForm<FormData>({
+  const [transactionType, setTransactionType] = useState<TransactionType>('');
+  const [categorySelected, setCategorySelected] = useState<Category>(
+    {} as Category,
+  );
+
+  const { goBack, navigate } = useNavigation<RegisterTransactionScreenProps>();
+  const { registerTransaction, loading } = useTransactions();
+
+  const { control, handleSubmit, setValue, reset } = useForm<FormData>({
     defaultValues: {
       name: '',
       amount: '',
@@ -51,20 +70,48 @@ const RegisterTransaction = (): JSX.Element => {
     resolver: yupResolver(schema),
   });
 
-  const [transactionType, setTransactionType] = useState<TransactionType>('');
-
-  const [categorySelected, setCategorySelected] = useState<Category>(
-    {} as Category,
-  );
-
-  const onSubmit = useCallback(({ name, amount }: FormData) => {
-    console.log({
-      name,
-      amount,
-      category: categorySelected.key,
-      transactionType,
+  const clearFields = useCallback(() => {
+    reset({
+      name: '',
+      amount: '',
     });
-  }, []);
+    setCategorySelected({} as Category);
+    setTransactionType('');
+  }, [reset]);
+
+  const onSubmit = useCallback(
+    async ({ name, amount }: FormData) => {
+      try {
+        if (!transactionType) {
+          throw new Error('Selecione o tipo da sua transação');
+        }
+
+        if (!categorySelected.key) {
+          throw new Error('Selecione a categoria da sua transação');
+        }
+
+        await registerTransaction({
+          name,
+          amount,
+          category: categorySelected,
+          transactionType,
+        });
+
+        clearFields();
+        navigate('Dashboard');
+      } catch (error) {
+        const message = verifyCodeError(error);
+        Alert.alert('Ops...', message);
+      }
+    },
+    [
+      transactionType,
+      categorySelected,
+      registerTransaction,
+      navigate,
+      clearFields,
+    ],
+  );
 
   const categorySelectModaloffset = useSharedValue(INITIAL_VALUE);
 
@@ -91,7 +138,7 @@ const RegisterTransaction = (): JSX.Element => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <Container>
-        <Header title="Cadastrar transação" />
+        <Header title="Cadastrar transação" onGoback={goBack} />
         <Form>
           <Field>
             <Controller
@@ -145,7 +192,9 @@ const RegisterTransaction = (): JSX.Element => {
             />
           </Field>
 
-          <Button onPress={handleSubmit(onSubmit)}>Enviar</Button>
+          <Button loading={loading} onPress={handleSubmit(onSubmit)}>
+            Enviar
+          </Button>
         </Form>
 
         <Animated.View
