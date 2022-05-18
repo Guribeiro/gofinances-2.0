@@ -9,13 +9,10 @@ const Container = styled.View`
 `;
 
 const Loading = ({ size = 'small' }: ActivityIndicatorProps): JSX.Element => {
-  const { customTheme } = useTheme();
+  const { theme } = useTheme();
   return (
     <Container>
-      <ActivityIndicator
-        size={size}
-        color={customTheme.palett.colors.text_primary_100}
-      />
+      <ActivityIndicator size={size} color={theme.palett.colors.white} />
     </Container>
   );
 };
