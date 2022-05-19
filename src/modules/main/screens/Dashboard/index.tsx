@@ -38,14 +38,14 @@ type DashboardScreenProps = DrawerNavigationProp<
 >;
 
 const Dashboard = (): JSX.Element => {
-  const { dispatch } = useNavigation<DashboardScreenProps>();
+  const { dispatch, navigate } = useNavigation<DashboardScreenProps>();
   const { user } = useAuthentication();
   const { transactions } = useTransactions();
 
   return (
     <Container>
       <Header>
-        <UserInfo>
+        <UserInfo onPress={() => navigate('ProfileRoutes')}>
           <Info>
             <Photo
               source={{

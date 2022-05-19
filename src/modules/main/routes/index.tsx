@@ -3,6 +3,7 @@ import { Dimensions } from 'react-native';
 import { useTheme } from '@shared/hooks/theme';
 
 import SettingsRoutes from '@modules/settings/routes';
+import ProfileRoutes from '@modules/profile/routes';
 
 import Dashboard from '../screens/Dashboard';
 import DrawerContent from '../components/DrawerContent';
@@ -12,6 +13,7 @@ export type RootMainParamsList = {
   Dashboard: undefined;
   RegisterTransaction: undefined;
   SettingsRoutes: undefined;
+  ProfileRoutes: undefined;
 };
 
 const { Navigator, Screen } = createDrawerNavigator<RootMainParamsList>();
@@ -44,6 +46,8 @@ const MainRoutes = (): JSX.Element => {
       <Screen name="SettingsRoutes" component={SettingsRoutes} />
 
       <Screen name="RegisterTransaction" component={RegisterTransaction} />
+
+      <Screen name="ProfileRoutes" component={ProfileRoutes} />
     </Navigator>
   );
 };

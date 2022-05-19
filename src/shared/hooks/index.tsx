@@ -1,6 +1,7 @@
+import { ReactNode } from 'react';
 import { AuthenticationProvider } from '@modules/authentication/hooks/authentication';
 import { TransactionsProvider } from '@modules/main/hooks/transactions';
-import { ReactNode } from 'react';
+import { ProfileProvider } from '@modules/profile/hooks/profile';
 import { ThemeProvider } from './theme';
 
 type AppProviderProps = {
@@ -11,7 +12,9 @@ const AppProvider = ({ children }: AppProviderProps): JSX.Element => {
   return (
     <ThemeProvider>
       <AuthenticationProvider>
-        <TransactionsProvider>{children}</TransactionsProvider>
+        <ProfileProvider>
+          <TransactionsProvider>{children}</TransactionsProvider>
+        </ProfileProvider>
       </AuthenticationProvider>
     </ThemeProvider>
   );

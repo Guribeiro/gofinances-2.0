@@ -25,7 +25,7 @@ export const Header = styled.View`
     ${({ theme }) => theme.screen.rem(1.5)}px;
 `;
 
-export const UserInfo = styled.View`
+export const UserInfo = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
