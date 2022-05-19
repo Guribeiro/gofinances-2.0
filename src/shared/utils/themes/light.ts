@@ -1,4 +1,6 @@
-export const light = {
+import { Palette } from './ITheme';
+
+export const light: Palette = {
   title: 'light',
   fonts: {
     regular: 'Poppins_400Regular',

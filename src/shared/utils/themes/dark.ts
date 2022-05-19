@@ -1,4 +1,6 @@
-export const dark = {
+import { Palette } from './ITheme';
+
+export const dark: Palette = {
   title: 'dark',
   fonts: {
     regular: 'Poppins_400Regular',
