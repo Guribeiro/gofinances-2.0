@@ -13,6 +13,7 @@ import {
   signInWithEmailAndPassword,
   onAuthStateChanged,
   createUserWithEmailAndPassword,
+  signOut,
 } from 'firebase/auth';
 import { auth, database } from '@shared/services/firebase';
 
@@ -43,11 +44,13 @@ type SignUpProps = {
 };
 
 type AuthenticationContextData = {
+  persistedLoading: boolean;
   user: User;
   signUp(props: SignUpProps): Promise<void>;
   signInWithGoogle(): Promise<void>;
   signInWithApple(): Promise<void>;
   signInWithCredentials(props: SignInWithCredentialsProps): Promise<void>;
+  signOutUser(): Promise<void>;
 };
 
 type Type = 'success' | 'dismiss';
@@ -77,7 +80,17 @@ interface AuthenticationProviderProps {
 const AuthenticationProvider = ({
   children,
 }: AuthenticationProviderProps): JSX.Element => {
+  const [persistedLoading, setPersistedLoading] = useState(false);
   const [user, setUser] = useState<User>({} as User);
+
+  const signOutUser = useCallback(async () => {
+    try {
+      setUser({} as User);
+      await signOut(auth);
+    } catch (error) {
+      throw new Error(error as string);
+    }
+  }, []);
 
   const signUp = useCallback(
     async ({ name, email, password, photo }: SignUpProps) => {
@@ -239,6 +252,7 @@ const AuthenticationProvider = ({
   const loadPersistedAuth = useCallback(() => {
     onAuthStateChanged(auth, observedUser => {
       if (observedUser) {
+        setPersistedLoading(true);
         const name = observedUser.displayName!;
 
         const photo =
@@ -254,6 +268,7 @@ const AuthenticationProvider = ({
           },
         };
         setUser(userAuthenticated);
+        setPersistedLoading(false);
       }
     });
   }, []);
@@ -284,11 +299,13 @@ const AuthenticationProvider = ({
   return (
     <AuthenticationContext.Provider
       value={{
+        persistedLoading,
         user,
         signUp,
         signInWithGoogle,
         signInWithApple,
         signInWithCredentials,
+        signOutUser,
       }}
     >
       {children}

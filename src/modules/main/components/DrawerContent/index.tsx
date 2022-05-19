@@ -1,5 +1,6 @@
 import { DrawerContentComponentProps } from '@react-navigation/drawer';
 
+import { useAuthentication } from '@modules/authentication/hooks/authentication';
 import DrawerItem from './DrawerItem';
 import Spacer from '../Spacer';
 
@@ -11,6 +12,7 @@ const DrawerContent = ({
   navigation,
   ...rest
 }: DrawerContentComponentProps): JSX.Element => {
+  const { signOutUser } = useAuthentication();
   return (
     <Container>
       <DrawerScrollView {...rest}>
@@ -44,11 +46,7 @@ const DrawerContent = ({
           onPress={() => navigation.navigate('SettingsRoutes')}
         />
 
-        <DrawerItem
-          label="Sair"
-          icon="power"
-          onPress={() => console.log('signout')}
-        />
+        <DrawerItem label="Sair" icon="power" onPress={() => signOutUser()} />
       </DrawerScrollView>
     </Container>
   );

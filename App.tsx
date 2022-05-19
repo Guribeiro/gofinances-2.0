@@ -3,9 +3,12 @@ import 'intl/locale-data/jsonp/en';
 import React, { useState, useEffect, useCallback } from 'react';
 import { StatusBar, View } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
+import { useAuthentication } from '@modules/authentication/hooks/authentication';
 
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ScreenProvider } from 'responsive-native';
+
+import Lottie from '@shared/components/Lottie';
 
 import { loadAsync } from 'expo-font';
 import {
@@ -20,6 +23,8 @@ import Routes from '@shared/routes';
 
 const App = (): JSX.Element => {
   const [appIsReady, setAppIsReady] = useState(false);
+
+  const { persistedLoading } = useAuthentication();
 
   useEffect(() => {
     async function prepare() {
@@ -49,8 +54,14 @@ const App = (): JSX.Element => {
     }
   }, [appIsReady]);
 
-  if (!appIsReady) {
-    return <View />;
+  if (!appIsReady && !persistedLoading) {
+    return (
+      <View
+        style={{ flex: 1, alignContent: 'center', justifyContent: 'center' }}
+      >
+        <Lottie />
+      </View>
+    );
   }
 
   return (

@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import {
   createContext,
   ReactNode,
@@ -103,6 +104,7 @@ const TransactionsProvider = ({
 
   useEffect(() => {
     const loadTransactions = async () => {
+      if (!user.id) return;
       const userTransactionsCollectionRef = collection(
         database,
         'users',
