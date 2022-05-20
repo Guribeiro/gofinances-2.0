@@ -45,11 +45,13 @@ const Dashboard = (): JSX.Element => {
   return (
     <Container>
       <Header>
-        <UserInfo onPress={() => navigate('ProfileRoutes')}>
-          <Info>
+        <UserInfo>
+          <Info onPress={() => navigate('ProfileRoutes')}>
             <Photo
               source={{
-                uri: user.info.photo,
+                uri:
+                  user.info.photo?.url ||
+                  `https://ui-avatars.com/api/?name=${user.info.name}&length=1`,
               }}
             />
             <User>

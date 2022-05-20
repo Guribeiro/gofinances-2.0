@@ -25,10 +25,15 @@ type User = {
   info: Info;
 };
 
+export type Photo = {
+  url: string;
+  name: string;
+};
+
 type Info = {
   name: string;
   email: string;
-  photo?: string;
+  photo: Photo;
 };
 
 type SignInWithCredentialsProps = {
@@ -62,7 +67,7 @@ type AuthorizationResponse = {
   };
 };
 
-type UserInfo = {
+type GoogleUserInfo = {
   id: string;
   name: string;
   email: string;
@@ -101,7 +106,7 @@ const AuthenticationProvider = ({
           password,
         );
 
-        const userPhoto =
+        const url =
           photo || `https://ui-avatars.com/api/?name=${name}&length=1`;
 
         const docUserRef = doc(database, 'users', signedUser.uid);
@@ -109,7 +114,10 @@ const AuthenticationProvider = ({
         const userInfo: Info = {
           name,
           email,
-          photo: userPhoto,
+          photo: {
+            url,
+            name: url,
+          },
         };
 
         await setDoc(docUserRef, userInfo);
@@ -137,13 +145,13 @@ const AuthenticationProvider = ({
         );
 
         const { id, email, name, picture } =
-          (await response.json()) as UserInfo;
+          (await response.json()) as GoogleUserInfo;
 
         const docUserRef = doc(database, 'users', id);
 
         onSnapshot(docUserRef, docData => {
           if (docData.exists()) {
-            const docUserInfo = docData.data() as UserInfo;
+            const docUserInfo = docData.data() as Info;
 
             const userAuthenticated: User = {
               id,
@@ -162,7 +170,10 @@ const AuthenticationProvider = ({
                 info: {
                   email,
                   name,
-                  photo: picture,
+                  photo: {
+                    url: picture,
+                    name: picture,
+                  },
                 },
               });
             });
@@ -188,11 +199,11 @@ const AuthenticationProvider = ({
       if (credentials) {
         const name = credentials.fullName!.givenName!;
 
-        const photo = `https://ui-avatars.com/api/?name=${name}&length=1`;
+        const url = `https://ui-avatars.com/api/?name=${name}&length=1`;
 
         onSnapshot(docUserRef, docData => {
           if (docData.exists()) {
-            const docUserInfo = docData.data() as UserInfo;
+            const docUserInfo = docData.data() as Info;
 
             const userAuthenticated: User = {
               id: credentials.user,
@@ -204,7 +215,10 @@ const AuthenticationProvider = ({
             const authenticatedUserInfo: Info = {
               email: credentials.email!,
               name,
-              photo,
+              photo: {
+                url,
+                name: url,
+              },
             };
 
             setDoc(docUserRef, authenticatedUserInfo).then(() => {
@@ -233,7 +247,7 @@ const AuthenticationProvider = ({
         const docUserRef = doc(database, 'users', signedUser.uid);
 
         onSnapshot(docUserRef, docData => {
-          const docUserInfo = docData.data() as UserInfo;
+          const docUserInfo = docData.data() as Info;
 
           const userAuthenticated: User = {
             id: signedUser.uid,
@@ -249,52 +263,37 @@ const AuthenticationProvider = ({
     [],
   );
 
-  const loadPersistedAuth = useCallback(() => {
-    onAuthStateChanged(auth, observedUser => {
-      if (observedUser) {
+  useEffect(() => {
+    const loadPersistedAuth = async () => {
+      try {
         setPersistedLoading(true);
-        const name = observedUser.displayName!;
+        const unsubscribe = onAuthStateChanged(auth, observedUser => {
+          if (observedUser) {
+            const docUserRef = doc(database, 'users', observedUser.uid);
 
-        const photo =
-          observedUser.photoURL ||
-          `https://ui-avatars.com/api/?name=${name}&length=1`;
+            const unsubscribeSnapshot = onSnapshot(docUserRef, docData => {
+              const docUserInfo = docData.data() as Info;
 
-        const userAuthenticated: User = {
-          id: observedUser.uid,
-          info: {
-            name,
-            email: observedUser.email!,
-            photo,
-          },
-        };
-        setUser(userAuthenticated);
+              setUser({
+                id: docData.id,
+                info: docUserInfo,
+              });
+            });
+
+            return () => unsubscribeSnapshot();
+          }
+        });
+
+        return () => unsubscribe();
+      } catch (error) {
+        console.log(error);
+      } finally {
         setPersistedLoading(false);
       }
-    });
-  }, []);
+    };
 
-  useEffect(() => {
     loadPersistedAuth();
-  }, [loadPersistedAuth]);
-
-  useEffect(() => {
-    if (!user.id) {
-      return;
-    }
-
-    const docUserRef = doc(database, 'users', user.id);
-
-    const unsubscribe = onSnapshot(docUserRef, docData => {
-      const docUserInfo = docData.data() as Info;
-
-      setUser({
-        id: user.id,
-        info: docUserInfo,
-      });
-    });
-
-    return () => unsubscribe();
-  }, [user]);
+  }, []);
 
   return (
     <AuthenticationContext.Provider

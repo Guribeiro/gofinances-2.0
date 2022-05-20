@@ -25,13 +25,17 @@ export const Header = styled.View`
     ${({ theme }) => theme.screen.rem(1.5)}px;
 `;
 
-export const UserInfo = styled.TouchableOpacity`
+export const UserInfo = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
 `;
 
-export const Info = styled(UserInfo)``;
+export const Info = styled.TouchableOpacity`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+`;
 
 export const User = styled.View`
   margin-left: ${({ theme }) => theme.screen.rem(1)}px;
@@ -45,14 +49,16 @@ export const Photo = styled.Image`
 
 export const UserName = styled(Text)`
   font-family: ${({ theme }) => theme.palett.fonts.bold};
+  color: ${({ theme }) => theme.palett.colors.white};
 `;
 export const UserGreeting = styled(Text)`
   font-family: ${({ theme }) => theme.palett.fonts.regular};
+  color: ${({ theme }) => theme.palett.colors.white};
 `;
 
 export const Icon = styled(Feather)`
   font-size: ${({ theme }) => theme.screen.rem(1.5, true)}px;
-  color: ${({ theme }) => theme.palett.colors.shape};
+  color: ${({ theme }) => theme.palett.colors.white};
 `;
 
 export const Title = styled(Text)`
