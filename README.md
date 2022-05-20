@@ -70,7 +70,7 @@ Technologies that I used to develop this mobile application
 **Clone the project and access the folder**
 
 ```bash
-git clone git@github.com:Guribeiro/financial-control-mobile.git && cd financial-control-mobile
+git clone git@github.com:Guribeiro/gofinances-2.0.git && cd gofinances-2.0
 ```
 
 ### For Installing the dependencies you can run:
@@ -79,14 +79,17 @@ git clone git@github.com:Guribeiro/financial-control-mobile.git && cd financial-
  yarn
 ```
 
-## Before you run the project, you should add some firebase credentials to make it works
+## Before you run the project, you should add some firebase and google credentials to make it works
 
 - [create a firebase project at **Firebase Console**](https://cloud.google.com/firestore/docs/client/get-firebase)
 - create a **_.env_** file on the project root as same as the **_.env.example_** file
 - fill the  **_.env_** with **your** project credentials
 ```bash
-# FIREBASE
+#GOOGLE AUTHENTICATION
+CLIENT_ID=
+REDIRECT_URI=
 
+# FIREBASE
 API_KEY=
 AUTH_DOMAIN=
 PROJECT_ID=
