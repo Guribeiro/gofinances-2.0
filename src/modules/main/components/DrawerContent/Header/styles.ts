@@ -10,7 +10,7 @@ export const Container = styled.View`
 export const Text = styled.Text`
   font-family: ${({ theme }) => theme.palett.fonts.medium};
   font-size: ${({ theme }) => theme.screen.rem(1.5)}px;
-  color: ${({ theme }) => theme.palett.colors.shape};
+  color: ${({ theme }) => theme.palett.colors.white};
   max-width: ${({ theme }) => theme.screen.rem(18)}px;
 `;
 

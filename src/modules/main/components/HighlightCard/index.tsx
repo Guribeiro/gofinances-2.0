@@ -46,9 +46,9 @@ const HighlightCard = ({
     total: {
       icon: {
         name: 'dollar-sign',
-        color: theme.palett.colors.shape,
+        color: theme.palett.colors.white,
       },
-      color: theme.palett.colors.shape,
+      color: theme.palett.colors.white,
       background: theme.palett.colors.secondary,
     },
   };

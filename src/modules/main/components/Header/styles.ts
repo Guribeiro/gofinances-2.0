@@ -24,12 +24,13 @@ export const Button = styled.TouchableOpacity`
 
 export const Icon = styled(Feather)`
   font-size: ${({ theme }) => theme.screen.rem(1.5, true)}px;
-  color: ${({ theme }) => theme.palett.colors.shape};
+  color: ${({ theme }) => theme.palett.colors.white};
 `;
 
 export const Title = styled(Text)`
   font-family: ${({ theme }) => theme.palett.fonts.regular};
   font-size: ${({ theme }) => theme.screen.rem(1.125)}px;
+  color: ${({ theme }) => theme.palett.colors.white};
   width: 100%;
   text-align: center;
 `;

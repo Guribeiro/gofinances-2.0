@@ -17,7 +17,7 @@ const DrawerItem = ({ label, icon, onPress }: DrawerItemProps): JSX.Element => {
       {icon && (
         <Feather
           name={icon}
-          color={theme.palett.colors.shape}
+          color={theme.palett.colors.white}
           size={theme.screen.rem(1)}
         />
       )}

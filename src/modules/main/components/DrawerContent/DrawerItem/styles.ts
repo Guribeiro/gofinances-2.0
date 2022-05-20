@@ -7,7 +7,7 @@ export const Container = styled.TouchableOpacity`
 `;
 
 export const Label = styled.Text`
-  color: ${({ theme }) => theme.palett.colors.shape};
+  color: ${({ theme }) => theme.palett.colors.white};
   font-family: ${({ theme }) => theme.palett.fonts.medium};
   padding: ${({ theme }) => theme.screen.rem(0.75)}px;
   font-size: ${({ theme }) => theme.screen.rem(1, true)}px;

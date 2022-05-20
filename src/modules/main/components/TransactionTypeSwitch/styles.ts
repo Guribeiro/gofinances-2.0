@@ -51,7 +51,7 @@ export const TransactionTypeButton = styled(
 `;
 
 export const TransactionTypeButtonText = styled(Text)`
-  color: ${({ theme }) => theme.palett.colors.title};
+  color: ${({ theme }) => theme.palett.colors.text};
   font-family: ${({ theme }) => theme.palett.fonts.regular};
   font-size: ${({ theme }) => theme.screen.rem(0.875, true)}px;
 `;

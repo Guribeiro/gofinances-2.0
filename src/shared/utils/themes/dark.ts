@@ -20,8 +20,8 @@ export const dark: Palette = {
     attention_light: 'rgba(232, 63, 91, 0.5)',
 
     shape: '#1B1B1D',
-    title: '#363F5F',
-    text: '#E9EDEE',
+    title: '#F0F2F5',
+    text: '#9E9E9E',
     background: '#141517',
     white: '#FFFFFF',
   },

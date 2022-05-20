@@ -58,7 +58,7 @@ export const Icon = styled(Feather)<IconProps>`
   ${({ theme, selected }) =>
     selected &&
     css`
-      color: ${theme.palett.colors.shape};
+      color: ${theme.palett.colors.white};
     `}
 `;
 
@@ -69,7 +69,7 @@ export const Name = styled(Text)<NameProps>`
   ${({ theme, selected }) =>
     selected &&
     css`
-      color: ${theme.palett.colors.shape};
+      color: ${theme.palett.colors.white};
     `}
 `;
 

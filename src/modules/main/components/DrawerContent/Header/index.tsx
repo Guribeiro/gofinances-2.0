@@ -18,13 +18,13 @@ const Header = ({ navigation }: HeaderProps): JSX.Element => {
   return (
     <Container>
       <Text>
-        Olá, <TextEmphasized>{user.name}</TextEmphasized>
+        Olá, <TextEmphasized>{user.info.name}</TextEmphasized>
       </Text>
       <CloseDrawerButton onPress={() => closeDrawer()}>
         <Feather
           name="x"
           size={theme.screen.rem(1.5, true)}
-          color={theme.palett.colors.shape}
+          color={theme.palett.colors.white}
         />
       </CloseDrawerButton>
     </Container>
