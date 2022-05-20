@@ -5,6 +5,7 @@ import React, {
   useState,
   useEffect,
   useContext,
+  ReactNode,
 } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
@@ -49,17 +50,18 @@ export interface ResponsiveTheme {
 }
 
 interface Props {
-  children?: JSX.Element;
+  children: ReactNode;
 }
 
 const ThemeProvider = ({ children }: Props): JSX.Element => {
-  const [theme, setTheme] = useState<Theme>(light);
+  const THEME_STORAGE_KEY = '@gofinances/theme';
 
+  const [theme, setTheme] = useState<Theme>(dark);
   const { breakpoint, padding, baseFontSize, fontScaleFactor } = useScreen();
 
   useEffect(() => {
     const loadStorage = async () => {
-      const themeStoraged = await AsyncStorage.getItem('@gofinances/theme');
+      const themeStoraged = await AsyncStorage.getItem(THEME_STORAGE_KEY);
       if (themeStoraged) {
         setTheme(JSON.parse(themeStoraged));
       }
@@ -68,7 +70,7 @@ const ThemeProvider = ({ children }: Props): JSX.Element => {
   }, []);
 
   useEffect(() => {
-    AsyncStorage.setItem('@gofinances/theme', JSON.stringify(theme));
+    AsyncStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(theme));
   }, [theme]);
 
   const customTheme = useMemo(() => {

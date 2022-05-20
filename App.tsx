@@ -8,8 +8,6 @@ import { useAuthentication } from '@modules/authentication/hooks/authentication'
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ScreenProvider } from 'responsive-native';
 
-import Lottie from '@shared/components/Lottie';
-
 import { loadAsync } from 'expo-font';
 import {
   Poppins_300Light,
@@ -57,10 +55,11 @@ const App = (): JSX.Element => {
   if (!appIsReady && !persistedLoading) {
     return (
       <View
-        style={{ flex: 1, alignContent: 'center', justifyContent: 'center' }}
-      >
-        <Lottie />
-      </View>
+        style={{
+          flex: 1,
+          backgroundColor: '#5636D3',
+        }}
+      />
     );
   }
 

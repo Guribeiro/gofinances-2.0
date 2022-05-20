@@ -1,11 +1,8 @@
 import { NavigationContainer } from '@react-navigation/native';
 
-import AuthenticationRoutes from '@modules/authentication/routes';
-import MainRoutes from '@modules/main/routes';
-
-import { useAuthentication } from '@modules/authentication/hooks/authentication';
-
 import styled from 'styled-components/native';
+
+import SplashRoutes from './splash.routes';
 
 const Container = styled.View`
   flex: 1;
@@ -13,11 +10,10 @@ const Container = styled.View`
 `;
 
 const Routes = (): JSX.Element => {
-  const { user } = useAuthentication();
   return (
     <Container>
       <NavigationContainer>
-        {user.id ? <MainRoutes /> : <AuthenticationRoutes />}
+        <SplashRoutes />
       </NavigationContainer>
     </Container>
   );
