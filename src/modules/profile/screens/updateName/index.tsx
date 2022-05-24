@@ -11,9 +11,9 @@ import { RootProfileParamsList } from '@modules/profile/routes';
 
 import { useAuthentication } from '@modules/authentication/hooks/authentication';
 
-import Input from '@modules/main/components/Inputs/InputText';
-import Header from '@modules/main/components/Header';
-import Button from '@modules/main/components/Button';
+import Input from '@modules/transactions/components/Inputs/InputText';
+import Header from '@modules/transactions/components/Header';
+import Button from '@modules/transactions/components/Button';
 
 import { useProfile } from '@modules/profile/hooks/profile';
 

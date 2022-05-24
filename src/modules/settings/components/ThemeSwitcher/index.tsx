@@ -3,7 +3,7 @@ import { Text } from '@shared/components/Text';
 import styled from 'styled-components/native';
 import { useTheme } from '@shared/hooks/theme';
 import { Feather } from '@expo/vector-icons';
-import Spacer from '@modules/main/components/Spacer';
+import Spacer from '@modules/transactions/components/Spacer';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,

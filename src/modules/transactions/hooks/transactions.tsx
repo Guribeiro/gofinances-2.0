@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable consistent-return */
 import {
   createContext,
@@ -5,6 +6,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 import { addDoc, collection, onSnapshot, Timestamp } from 'firebase/firestore';
@@ -35,6 +37,10 @@ export type Transaction = TransactionFirebase & TransactionFirebaseFormatted;
 
 export type Transactions = Array<Transaction>;
 
+export type TransactionsHighlight = Array<{
+  [key: string]: string;
+}>;
+
 type RegisterTransactionProps = {
   name: string;
   amount: string;
@@ -45,6 +51,7 @@ type RegisterTransactionProps = {
 type TransactionsContextData = {
   loading: boolean;
   transactions: Transactions;
+  transactionsHighlight: TransactionsHighlight;
   registerTransaction(props: RegisterTransactionProps): Promise<void>;
 };
 
@@ -102,6 +109,41 @@ const TransactionsProvider = ({
     [user.id],
   );
 
+  const transactionsHighlight = useMemo(() => {
+    const transactionsHighlightTotal = transactions.reduce(
+      (accumulator, current) => {
+        switch (current.transactionType) {
+          case 'income':
+            accumulator.incomes += current.amount;
+            accumulator.total += current.amount;
+            break;
+
+          case 'outcome':
+            accumulator.outcomes += current.amount;
+            accumulator.total -= current.amount;
+            break;
+          default:
+        }
+        return accumulator;
+      },
+      {
+        incomes: 0,
+        outcomes: 0,
+        total: 0,
+      },
+    );
+
+    const formatted = Object.keys(transactionsHighlightTotal).map(item => {
+      const key = item as 'incomes' | 'outcomes' | 'total';
+
+      return {
+        [key]: currencyFormatter(transactionsHighlightTotal[key]),
+      };
+    });
+
+    return formatted;
+  }, [transactions]);
+
   useEffect(() => {
     const loadTransactions = async () => {
       if (!user.id) return;
@@ -152,7 +194,12 @@ const TransactionsProvider = ({
 
   return (
     <TransactionsContext.Provider
-      value={{ loading, transactions, registerTransaction }}
+      value={{
+        loading,
+        transactions,
+        transactionsHighlight,
+        registerTransaction,
+      }}
     >
       {children}
     </TransactionsContext.Provider>

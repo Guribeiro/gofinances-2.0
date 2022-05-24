@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { TextInputProps } from 'react-native';
 import { FieldError } from 'react-hook-form';
 import Feather from '@expo/vector-icons/Feather';
-import TextError from '@modules/main/components/Inputs/TextError';
+import TextError from '@modules/transactions/components/Inputs/TextError';
 import { useTheme } from '@shared/hooks/theme';
 import {
   Container,

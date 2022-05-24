@@ -13,13 +13,13 @@ import {
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import Scroll from '@modules/main/components/Scroll';
-import Spacer from '@modules/main/components/Spacer';
-import Header from '@modules/main/components/Header';
+import Scroll from '@modules/transactions/components/Scroll';
+import Spacer from '@modules/transactions/components/Spacer';
+import Header from '@modules/transactions/components/Header';
 
-import Button from '@modules/main/components/Button';
+import Button from '@modules/transactions/components/Button';
 
-import InputPassword from '@modules/main/components/Inputs/InputPassword';
+import InputPassword from '@modules/transactions/components/Inputs/InputPassword';
 
 import { useCallback, useState } from 'react';
 import { useAuthentication } from '@modules/authentication/hooks/authentication';

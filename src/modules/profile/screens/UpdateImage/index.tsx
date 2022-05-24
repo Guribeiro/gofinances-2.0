@@ -1,6 +1,6 @@
 import { useProfile } from '@modules/profile/hooks/profile';
-import Spacer from '@modules/main/components/Spacer';
-import Loading from '@modules/main/components/Loading';
+import Spacer from '@modules/transactions/components/Spacer';
+import Loading from '@modules/transactions/components/Loading';
 
 import { useCallback } from 'react';
 import { Alert } from 'react-native';

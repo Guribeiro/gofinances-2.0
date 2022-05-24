@@ -12,21 +12,21 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useTransactions } from '@modules/main/hooks/transactions';
+import { useTransactions } from '@modules/transactions/hooks/transactions';
 
 import { Category } from '@shared/utils/categories';
 import { verifyCodeError } from '@shared/utils/errors/firebase';
 
-import { RootMainParamsList } from '@modules/main/routes';
-import Spacer from '@modules/main/components/Spacer';
-import Input from '@modules/main/components/Inputs/InputText';
-import InputMoney from '@modules/main/components/Inputs/InputMoney';
-import Button from '@modules/main/components/Button';
+import { RootMainParamsList } from '@modules/transactions/routes';
+import Spacer from '@modules/transactions/components/Spacer';
+import Input from '@modules/transactions/components/Inputs/InputText';
+import InputMoney from '@modules/transactions/components/Inputs/InputMoney';
+import Button from '@modules/transactions/components/Button';
 
-import Header from '@modules/main/components/Header';
+import Header from '@modules/transactions/components/Header';
 
-import TransactionTypeSwitch from '@modules/main/components/TransactionTypeSwitch';
-import CategorySelectButton from '@modules/main/components/CategorySelectButton';
+import TransactionTypeSwitch from '@modules/transactions/components/TransactionTypeSwitch';
+import CategorySelectButton from '@modules/transactions/components/CategorySelectButton';
 import CategorySelect from '../CategorySelect';
 
 import { Container, Form, Field } from './styles';

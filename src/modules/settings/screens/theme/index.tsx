@@ -5,8 +5,8 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import ThemeSwitcher from '@modules/settings/components/ThemeSwitcher';
-import Spacer from '@modules/main/components/Spacer';
-import Header from '@modules/main/components/Header';
+import Spacer from '@modules/transactions/components/Spacer';
+import Header from '@modules/transactions/components/Header';
 import Container from '@shared/components/Container';
 
 const Content = styled.View`

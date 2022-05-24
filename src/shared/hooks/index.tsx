@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { AuthenticationProvider } from '@modules/authentication/hooks/authentication';
-import { TransactionsProvider } from '@modules/main/hooks/transactions';
+import { TransactionsProvider } from '@modules/transactions/hooks/transactions';
 import { ProfileProvider } from '@modules/profile/hooks/profile';
 import { ThemeProvider } from './theme';
 

@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { KeyboardAvoidingView, Platform } from 'react-native';
 import styled from 'styled-components/native';
-import Scroll from '@modules/main/components/Scroll';
+import Scroll from '@modules/transactions/components/Scroll';
 
 export const Content = styled.View`
   flex: 1;

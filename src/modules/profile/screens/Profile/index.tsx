@@ -11,7 +11,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootProfileParamsList } from '@modules/profile/routes';
 import { useAuthentication } from '@modules/authentication/hooks/authentication';
 import EditProfileButton from '@modules/profile/components/EditProfileButton';
-import Header from '@modules/main/components/Header';
+import Header from '@modules/transactions/components/Header';
 import { useCallback } from 'react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import UpdateImage from '../UpdateImage';

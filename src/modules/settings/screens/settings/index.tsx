@@ -1,11 +1,11 @@
 import styled from 'styled-components/native';
 import Container from '@shared/components/Container';
-import Spacer from '@modules/main/components/Spacer';
+import Spacer from '@modules/transactions/components/Spacer';
 import NavigateButton from '@shared/components/NavigateButton';
 import { RootSettingsParamsList } from '@modules/settings/routes';
 import { useNavigation } from '@react-navigation/native';
 
-import Header from '@modules/main/components/Header';
+import Header from '@modules/transactions/components/Header';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export const Text = styled.Text`

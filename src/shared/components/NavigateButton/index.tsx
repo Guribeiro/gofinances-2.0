@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 import { TouchableOpacityProps, TouchableOpacity } from 'react-native';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { useTheme } from '@shared/hooks/theme';
-import Spacer from '@modules/main/components/Spacer';
+import Spacer from '@modules/transactions/components/Spacer';
 import { Text } from '../Text';
 
 const Container = styled(TouchableOpacity)`

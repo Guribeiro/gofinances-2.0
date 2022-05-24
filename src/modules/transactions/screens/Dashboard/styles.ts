@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 import { Text } from '@shared/components/Text';
 import Constants from 'expo-constants';
 
-import { Transaction } from '@modules/main/hooks/transactions';
+import { Transaction } from '@modules/transactions/hooks/transactions';
 
 import { FlatList, FlatListProps } from 'react-native';
 

@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Splash from '@modules/authentication/screens/Splash';
 import AuthenticationRoutes from '@modules/authentication/routes';
-import MainRoutes from '@modules/main/routes';
+import MainRoutes from '@modules/transactions/routes';
 
 import { useAuthentication } from '@modules/authentication/hooks/authentication';
 import { useTheme } from '@shared/hooks/theme';

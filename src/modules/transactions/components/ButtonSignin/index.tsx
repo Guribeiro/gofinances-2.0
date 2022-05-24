@@ -1,5 +1,5 @@
 import { TouchableOpacityProps } from 'react-native';
-import Loading from '@modules/main/components/Loading';
+import Loading from '@modules/transactions/components/Loading';
 import { SvgProps } from 'react-native-svg';
 
 import { Container } from './styles';

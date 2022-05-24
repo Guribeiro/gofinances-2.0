@@ -1,4 +1,4 @@
-import { Transaction } from '@modules/main/hooks/transactions';
+import { Transaction } from '@modules/transactions/hooks/transactions';
 
 import {
   Container,
