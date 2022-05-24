@@ -3,12 +3,6 @@ import { darken } from 'polished';
 import { Text } from '@shared/components/Text';
 import { Feather } from '@expo/vector-icons';
 
-// export const Container = styled.View`
-//   width: 100%;
-//   background-color: ${({ theme }) => theme.palett.colors.secondary};
-//   justify-content: space-between;
-// `;
-
 export const Container = styled.View`
   flex: 1;
   position: absolute;
