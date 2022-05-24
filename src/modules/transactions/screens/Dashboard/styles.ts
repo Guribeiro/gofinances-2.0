@@ -10,6 +10,10 @@ import { Feather } from '@expo/vector-icons';
 
 const { statusBarHeight } = Constants;
 
+type IconProps = {
+  color?: string;
+};
+
 export const Container = styled.View`
   background-color: ${({ theme }) => theme.palett.colors.background};
   align-items: center;
@@ -56,9 +60,25 @@ export const UserGreeting = styled(Text)`
   color: ${({ theme }) => theme.palett.colors.white};
 `;
 
-export const Icon = styled(Feather)`
+export const Icon = styled(Feather)<IconProps>`
   font-size: ${({ theme }) => theme.screen.rem(1.5, true)}px;
-  color: ${({ theme }) => theme.palett.colors.white};
+  color: ${({ theme, color }) => color || theme.palett.colors.white};
+`;
+
+export const OpenCalendar = styled.View`
+  align-items: flex-end;
+  margin-bottom: ${({ theme }) => theme.screen.rem(1)}px;
+`;
+
+export const OpenCalendarButton = styled.TouchableOpacity`
+  width: 30%;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const OpenCalendarButtonText = styled(Text)`
+  color: ${({ theme }) => theme.palett.colors.text};
+  margin-top: ${({ theme }) => theme.screen.rem(0.5)}px;
 `;
 
 export const Title = styled(Text)`

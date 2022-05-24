@@ -6,16 +6,23 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useMemo,
   useState,
 } from 'react';
-import { addDoc, collection, onSnapshot, Timestamp } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  onSnapshot,
+  Timestamp,
+  query,
+  where,
+} from 'firebase/firestore';
 import { useAuthentication } from '@modules/authentication/hooks/authentication';
 import { database } from '@shared/services/firebase';
 import { Category } from '@shared/utils/categories';
-import { format } from 'date-fns';
+import { format, startOfMonth, endOfMonth } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { currencyFormatter } from '@shared/utils/currencyFomatter';
+import { useCalendar } from './calendar';
 
 type TransactionType = 'income' | 'outcome';
 
@@ -37,10 +44,6 @@ export type Transaction = TransactionFirebase & TransactionFirebaseFormatted;
 
 export type Transactions = Array<Transaction>;
 
-export type TransactionsHighlight = Array<{
-  [key: string]: string;
-}>;
-
 type RegisterTransactionProps = {
   name: string;
   amount: string;
@@ -51,7 +54,6 @@ type RegisterTransactionProps = {
 type TransactionsContextData = {
   loading: boolean;
   transactions: Transactions;
-  transactionsHighlight: TransactionsHighlight;
   registerTransaction(props: RegisterTransactionProps): Promise<void>;
 };
 
@@ -72,6 +74,7 @@ const TransactionsProvider = ({
   );
 
   const { user } = useAuthentication();
+  const { date } = useCalendar();
 
   const registerTransaction = useCallback(
     async ({
@@ -109,44 +112,11 @@ const TransactionsProvider = ({
     [user.id],
   );
 
-  const transactionsHighlight = useMemo(() => {
-    const transactionsHighlightTotal = transactions.reduce(
-      (accumulator, current) => {
-        switch (current.transactionType) {
-          case 'income':
-            accumulator.incomes += current.amount;
-            accumulator.total += current.amount;
-            break;
-
-          case 'outcome':
-            accumulator.outcomes += current.amount;
-            accumulator.total -= current.amount;
-            break;
-          default:
-        }
-        return accumulator;
-      },
-      {
-        incomes: 0,
-        outcomes: 0,
-        total: 0,
-      },
-    );
-
-    const formatted = Object.keys(transactionsHighlightTotal).map(item => {
-      const key = item as 'incomes' | 'outcomes' | 'total';
-
-      return {
-        [key]: currencyFormatter(transactionsHighlightTotal[key]),
-      };
-    });
-
-    return formatted;
-  }, [transactions]);
-
   useEffect(() => {
     const loadTransactions = async () => {
-      if (!user.id) return;
+      const startOfMonthDate = startOfMonth(date);
+      const endOfMonthDate = endOfMonth(date);
+
       const userTransactionsCollectionRef = collection(
         database,
         'users',
@@ -154,50 +124,51 @@ const TransactionsProvider = ({
         'transactions',
       );
 
-      const unsubscribe = onSnapshot(
+      const onSnapshotQuery = query(
         userTransactionsCollectionRef,
-        querySnapshot => {
-          const transactionsDocsArray: Transactions = [];
-
-          querySnapshot.forEach(queryDoc => {
-            const transactionsDocData = queryDoc.data() as TransactionFirebase;
-
-            const createdAtFormatted = format(
-              transactionsDocData.createdAt.toDate(),
-              'dd/MM/yyyy',
-              {
-                locale: ptBR,
-              },
-            );
-
-            const amountFormatted = currencyFormatter(
-              transactionsDocData.amount,
-            );
-
-            const transactionFormatted: Transaction = {
-              ...transactionsDocData,
-              id: queryDoc.id,
-              createdAtFormatted,
-              amountFormatted,
-            };
-
-            transactionsDocsArray.push(transactionFormatted);
-          });
-          setTransactions(transactionsDocsArray);
-        },
+        where('createdAt', '>=', startOfMonthDate),
+        where('createdAt', '<=', endOfMonthDate),
       );
+
+      const unsubscribe = onSnapshot(onSnapshotQuery, querySnapshot => {
+        const transactionsDocsArray: Transactions = [];
+
+        querySnapshot.forEach(queryDoc => {
+          const transactionsDocData = queryDoc.data() as TransactionFirebase;
+
+          const createdAtFormatted = format(
+            transactionsDocData.createdAt.toDate(),
+            'dd/MM/yyyy',
+            {
+              locale: ptBR,
+            },
+          );
+
+          const amountFormatted = currencyFormatter(transactionsDocData.amount);
+
+          const transactionFormatted: Transaction = {
+            ...transactionsDocData,
+            id: queryDoc.id,
+            createdAtFormatted,
+            amountFormatted,
+          };
+
+          transactionsDocsArray.push(transactionFormatted);
+        });
+
+        setTransactions(transactionsDocsArray);
+      });
 
       return () => unsubscribe();
     };
     loadTransactions();
-  }, [user.id]);
+  }, [user.id, date]);
 
   return (
     <TransactionsContext.Provider
       value={{
         loading,
         transactions,
-        transactionsHighlight,
         registerTransaction,
       }}
     >

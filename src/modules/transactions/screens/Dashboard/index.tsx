@@ -12,6 +12,10 @@ import TransactionCard, {
 
 import { useAuthentication } from '@modules/authentication/hooks/authentication';
 import { useTransactions } from '@modules/transactions/hooks/transactions';
+
+import { useCalendar } from '@modules/transactions/hooks/calendar';
+import { useHighlight } from '@modules/transactions/hooks/highlights';
+import { useTheme } from '@shared/hooks/theme';
 import {
   Container,
   Header,
@@ -26,6 +30,9 @@ import {
   Title,
   Transactions,
   TransactionList,
+  OpenCalendar,
+  OpenCalendarButton,
+  OpenCalendarButtonText,
 } from './styles';
 
 export type TransactionListProps = TransactionsCardProps & {
@@ -40,7 +47,10 @@ type DashboardScreenProps = DrawerNavigationProp<
 const Dashboard = (): JSX.Element => {
   const { dispatch, navigate } = useNavigation<DashboardScreenProps>();
   const { user } = useAuthentication();
-  const { transactions, transactionsHighlight } = useTransactions();
+  const { transactions } = useTransactions();
+  const { highlights } = useHighlight();
+  const { openSelectMonth, dateFormatted } = useCalendar();
+  const { theme } = useTheme();
 
   return (
     <Container>
@@ -68,26 +78,23 @@ const Dashboard = (): JSX.Element => {
         </UserInfo>
       </Header>
       <HighlightCards>
-        {/* <HighlightCard
-          title="Entradas"
-          amount="R$ 17.400,00"
-          lastTransaction="Última entrada dia 13 de abril"
-          type="income"
-        />
-        <HighlightCard
-          title="Saídas"
-          amount="R$ 1.259,00"
-          lastTransaction="Última saída dia 3 de abril"
-          type="outcome"
-        />
-        <HighlightCard
-          title="Total"
-          amount="R$ 16.141,00"
-          lastTransaction="01 à 16 de abril"
-          type="total"
-        /> */}
+        {highlights.map(({ type, date, amount, title }) => (
+          <HighlightCard
+            key={type}
+            title={title}
+            amount={amount}
+            lastTransaction={date}
+            type={type}
+          />
+        ))}
       </HighlightCards>
       <Transactions>
+        <OpenCalendar>
+          <OpenCalendarButton onPress={openSelectMonth}>
+            <Icon color={theme.palett.colors.primary} name="calendar" />
+            <OpenCalendarButtonText>{dateFormatted}</OpenCalendarButtonText>
+          </OpenCalendarButton>
+        </OpenCalendar>
         <Title>Listagem</Title>
         <TransactionList
           data={transactions}

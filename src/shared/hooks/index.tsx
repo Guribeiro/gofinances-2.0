@@ -1,6 +1,8 @@
 import { ReactNode } from 'react';
 import { AuthenticationProvider } from '@modules/authentication/hooks/authentication';
 import { TransactionsProvider } from '@modules/transactions/hooks/transactions';
+import { HighlightProvider } from '@modules/transactions/hooks/highlights';
+import { CalendarProvider } from '@modules/transactions/hooks/calendar';
 import { ProfileProvider } from '@modules/profile/hooks/profile';
 import { ThemeProvider } from './theme';
 
@@ -13,7 +15,11 @@ const AppProvider = ({ children }: AppProviderProps): JSX.Element => {
     <ThemeProvider>
       <AuthenticationProvider>
         <ProfileProvider>
-          <TransactionsProvider>{children}</TransactionsProvider>
+          <CalendarProvider>
+            <TransactionsProvider>
+              <HighlightProvider>{children}</HighlightProvider>
+            </TransactionsProvider>
+          </CalendarProvider>
         </ProfileProvider>
       </AuthenticationProvider>
     </ThemeProvider>
