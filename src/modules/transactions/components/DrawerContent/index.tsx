@@ -21,7 +21,7 @@ const DrawerContent = ({
         <DrawerItem
           label="Início"
           icon="home"
-          onPress={() => navigation.navigate('BillsRoutes')}
+          onPress={() => navigation.navigate('Dashboard')}
         />
 
         <DrawerItem
