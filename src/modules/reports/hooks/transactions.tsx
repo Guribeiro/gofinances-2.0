@@ -3,13 +3,12 @@
 import {
   createContext,
   ReactNode,
-  useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 import {
-  addDoc,
   collection,
   onSnapshot,
   Timestamp,
@@ -18,10 +17,11 @@ import {
 } from 'firebase/firestore';
 import { useAuthentication } from '@modules/authentication/hooks/authentication';
 import { database } from '@shared/services/firebase';
-import { Category } from '@shared/utils/categories';
+import { categories, Category } from '@shared/utils/categories';
 import { format, startOfMonth, endOfMonth } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { currencyFormatter } from '@shared/utils/currencyFomatter';
+import { percentFormatter } from '@shared/utils/percentFormatter';
 import { useCalendar } from './calendar';
 
 type TransactionType = 'income' | 'outcome';
@@ -44,17 +44,28 @@ export type Transaction = TransactionFirebase & TransactionFirebaseFormatted;
 
 export type Transactions = Array<Transaction>;
 
-type RegisterTransactionProps = {
-  name: string;
-  amount: string;
-  category: Category;
-  transactionType: string;
+type TransactionsTotal = {
+  total: number;
+  totalFormatted: string;
+};
+
+export type ReportsTransactionsTotal = {
+  income: TransactionsTotal;
+  outcome: TransactionsTotal;
 };
 
 type TransactionsContextData = {
   loading: boolean;
   transactions: Transactions;
-  registerTransaction(props: RegisterTransactionProps): Promise<void>;
+  reportsTransactionsTotal: ReportsTransactionsTotal;
+  type: TransactionType;
+  setType: React.Dispatch<React.SetStateAction<TransactionType>>;
+  totalTransactionsByCategory: Array<TransactionByCategory>;
+};
+
+export type TransactionByCategory = TransactionsTotal & {
+  category: Category;
+  percent: string;
 };
 
 const TransactionsContext = createContext<TransactionsContextData>(
@@ -73,48 +84,15 @@ const TransactionsProvider = ({
     [] as Transactions,
   );
 
+  const [type, setType] = useState<TransactionType>('income');
+
   const { user } = useAuthentication();
   const { date } = useCalendar();
-
-  const registerTransaction = useCallback(
-    async ({
-      name,
-      amount,
-      category,
-      transactionType,
-    }: RegisterTransactionProps) => {
-      try {
-        setLoading(true);
-        const createdAt = Timestamp.fromDate(new Date());
-
-        const userTransactionsCollectionRef = collection(
-          database,
-          'users',
-          user.id,
-          'transactions',
-        );
-
-        const amountAsNumber = Number(amount);
-
-        await addDoc(userTransactionsCollectionRef, {
-          name,
-          amount: amountAsNumber,
-          category,
-          transactionType,
-          createdAt,
-        });
-      } catch (error) {
-        throw new Error(error as string);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [user.id],
-  );
 
   useEffect(() => {
     const loadTransactions = async () => {
       try {
+        setLoading(true);
         if (!user) return;
         const startOfMonthDate = startOfMonth(date);
         const endOfMonthDate = endOfMonth(date);
@@ -166,17 +144,97 @@ const TransactionsProvider = ({
         return () => unsubscribe();
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     };
     loadTransactions();
-  }, [user, user.id, date]);
+  }, [user.id, date, user]);
+
+  const reportsTransactionsTotal = useMemo(() => {
+    const { income, outcome } = transactions.reduce(
+      (accumulator, transaction) => {
+        switch (transaction.transactionType) {
+          case 'income':
+            accumulator.income += transaction.amount;
+            break;
+          case 'outcome':
+            accumulator.outcome += transaction.amount;
+            break;
+          default:
+        }
+        return accumulator;
+      },
+      {
+        income: 0,
+        outcome: 0,
+      },
+    );
+
+    const incomeFormatted = currencyFormatter(income);
+    const outcomeFormatted = currencyFormatter(outcome);
+
+    return {
+      income: {
+        total: income,
+        totalFormatted: incomeFormatted,
+      },
+      outcome: {
+        total: outcome,
+        totalFormatted: outcomeFormatted,
+      },
+    };
+  }, [transactions]);
+
+  const totalTransactionsByCategory = useMemo(() => {
+    const transactionsByType = transactions.filter(
+      transaction => transaction.transactionType === type,
+    );
+
+    const totalTransactionsByType = transactionsByType.reduce(
+      (accumulator, transaction) => {
+        return accumulator + transaction.amount;
+      },
+      0,
+    );
+
+    const incomesByCategory: Array<TransactionByCategory> = [];
+
+    categories.forEach(category => {
+      let categorySum = 0;
+
+      transactionsByType.forEach(income => {
+        if (income.category.key === category.key) {
+          categorySum += income.amount;
+        }
+      });
+
+      if (categorySum > 0) {
+        const percent = (categorySum / totalTransactionsByType) * 100;
+
+        const percentFormatted = percentFormatter(percent);
+
+        incomesByCategory.push({
+          category,
+          total: categorySum,
+          totalFormatted: currencyFormatter(categorySum),
+          percent: percentFormatted,
+        });
+      }
+    });
+
+    return incomesByCategory;
+  }, [transactions, type]);
 
   return (
     <TransactionsContext.Provider
       value={{
         loading,
         transactions,
-        registerTransaction,
+        reportsTransactionsTotal,
+        type,
+        setType,
+        totalTransactionsByCategory,
       }}
     >
       {children}

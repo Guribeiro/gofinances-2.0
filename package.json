@@ -49,6 +49,7 @@
     "responsive-native": "^1.0.2",
     "styled-components": "^5.3.5",
     "uuidv4": "^6.2.13",
+    "victory-native": "^36.4.0",
     "yup": "^0.32.11"
   },
   "devDependencies": {

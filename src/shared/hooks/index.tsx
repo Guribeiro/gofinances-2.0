@@ -4,6 +4,7 @@ import { TransactionsProvider } from '@modules/transactions/hooks/transactions';
 import { HighlightProvider } from '@modules/transactions/hooks/highlights';
 import { CalendarProvider } from '@modules/transactions/hooks/calendar';
 import { ProfileProvider } from '@modules/profile/hooks/profile';
+import { ReportsProvider } from '@modules/reports/hooks';
 import { ThemeProvider } from './theme';
 
 type AppProviderProps = {
@@ -14,13 +15,15 @@ const AppProvider = ({ children }: AppProviderProps): JSX.Element => {
   return (
     <ThemeProvider>
       <AuthenticationProvider>
-        <ProfileProvider>
-          <CalendarProvider>
-            <TransactionsProvider>
-              <HighlightProvider>{children}</HighlightProvider>
-            </TransactionsProvider>
-          </CalendarProvider>
-        </ProfileProvider>
+        <ReportsProvider>
+          <ProfileProvider>
+            <CalendarProvider>
+              <TransactionsProvider>
+                <HighlightProvider>{children}</HighlightProvider>
+              </TransactionsProvider>
+            </CalendarProvider>
+          </ProfileProvider>
+        </ReportsProvider>
       </AuthenticationProvider>
     </ThemeProvider>
   );

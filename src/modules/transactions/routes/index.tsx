@@ -4,6 +4,7 @@ import { useTheme } from '@shared/hooks/theme';
 
 import SettingsRoutes from '@modules/settings/routes';
 import ProfileRoutes from '@modules/profile/routes';
+import ReportsRoutes from '@modules/reports/routes';
 
 import Dashboard from '../screens/Dashboard';
 import DrawerContent from '../components/DrawerContent';
@@ -14,6 +15,7 @@ export type RootMainParamsList = {
   RegisterTransaction: undefined;
   SettingsRoutes: undefined;
   ProfileRoutes: undefined;
+  ReportsRoutes: undefined;
 };
 
 const { Navigator, Screen } = createDrawerNavigator<RootMainParamsList>();
@@ -48,6 +50,8 @@ const MainRoutes = (): JSX.Element => {
       <Screen name="RegisterTransaction" component={RegisterTransaction} />
 
       <Screen name="ProfileRoutes" component={ProfileRoutes} />
+
+      <Screen name="ReportsRoutes" component={ReportsRoutes} />
     </Navigator>
   );
 };

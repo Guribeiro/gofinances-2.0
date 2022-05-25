@@ -1,7 +1,7 @@
 import AnimatedLottieView from 'lottie-react-native';
 import lottieLoadingSource from '../../assets/lottie-loading.json';
 
-const Lottie = (): JSX.Element => {
+const Loading = (): JSX.Element => {
   return (
     <AnimatedLottieView
       autoPlay
@@ -12,4 +12,4 @@ const Lottie = (): JSX.Element => {
   );
 };
 
-export default Lottie;
+export default Loading;
