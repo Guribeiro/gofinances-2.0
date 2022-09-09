@@ -46,6 +46,7 @@ const ProfileProvider = ({ children }: ProfileProviderProps): JSX.Element => {
 
   const updateName = useCallback(async ({ userId, name }: UpdateNameProps) => {
     try {
+      setLoading(true);
       const docUserRef = doc(database, 'users', userId);
 
       await updateDoc(docUserRef, {
@@ -53,6 +54,8 @@ const ProfileProvider = ({ children }: ProfileProviderProps): JSX.Element => {
       });
     } catch (error) {
       throw new Error(error as string);
+    } finally {
+      setLoading(false);
     }
   }, []);
 

@@ -34,7 +34,7 @@ const schema = Yup.object().shape({
 
 const UpdateName = (): JSX.Element => {
   const { user } = useAuthentication();
-  const { updateName } = useProfile();
+  const { updateName, loading } = useProfile();
   const { goBack } = useNavigation<ProfileScreenProps>();
 
   const { control, handleSubmit } = useForm<FormData>({
@@ -51,8 +51,11 @@ const UpdateName = (): JSX.Element => {
           userId: user.id,
           name,
         });
+        Alert.alert('Nome atualizado com sucesso');
+        goBack();
       } catch (error) {
         Alert.alert(error as string);
+        console.log(error);
       }
     },
     [updateName, user.id],
@@ -76,7 +79,9 @@ const UpdateName = (): JSX.Element => {
             )}
           />
         </InputContainer>
-        <Button onPress={handleSubmit(handleUpdateName)}>Atualizar</Button>
+        <Button loading={loading} onPress={handleSubmit(handleUpdateName)}>
+          Atualizar
+        </Button>
       </Content>
     </Container>
   );
