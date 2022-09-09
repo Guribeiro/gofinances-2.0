@@ -3,7 +3,7 @@ import Spacer from '@modules/transactions/components/Spacer';
 import Loading from '@modules/transactions/components/Loading';
 
 import { useCallback } from 'react';
-import { Alert } from 'react-native';
+import { Alert, TouchableWithoutFeedback } from 'react-native';
 import {
   Container,
   Content,
@@ -39,29 +39,31 @@ const UpdateImage = ({ onRequestClose }: UpdateImageProps): JSX.Element => {
   }, [launchMediaLibrary]);
 
   return (
-    <Container>
-      <Content>
-        <Body>
-          <Title>Alterar foto de perfil</Title>
-          <Button onPress={handleLaunchCamera}>
-            <Icon name="camera" />
-            <ButtonText>Câmera</ButtonText>
-          </Button>
-          <Spacer size={16} />
-          <Button onPress={handleLaunchMediaLibrary}>
-            <Icon name="image" />
-            <ButtonText>Galeria</ButtonText>
-          </Button>
-        </Body>
-        {loading ? (
-          <Loading />
-        ) : (
-          <CloseButton onPress={onRequestClose}>
-            <Icon name="chevrons-down" />
-          </CloseButton>
-        )}
-      </Content>
-    </Container>
+    <TouchableWithoutFeedback onPress={onRequestClose}>
+      <Container>
+        <Content>
+          <Body>
+            <Title>Alterar foto de perfil</Title>
+            <Button onPress={handleLaunchCamera}>
+              <Icon name="camera" />
+              <ButtonText>Câmera</ButtonText>
+            </Button>
+            <Spacer size={16} />
+            <Button onPress={handleLaunchMediaLibrary}>
+              <Icon name="image" />
+              <ButtonText>Galeria</ButtonText>
+            </Button>
+          </Body>
+          {loading ? (
+            <Loading />
+          ) : (
+            <CloseButton onPress={onRequestClose}>
+              <Icon name="chevrons-down" />
+            </CloseButton>
+          )}
+        </Content>
+      </Container>
+    </TouchableWithoutFeedback>
   );
 };
 

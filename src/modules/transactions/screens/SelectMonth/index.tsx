@@ -1,6 +1,6 @@
-import { format, addMonths, subMonths } from 'date-fns';
 import ptBR from 'date-fns/esm/locale/pt-BR/index.js';
-
+import { format, addMonths, subMonths } from 'date-fns';
+import { TouchableWithoutFeedback } from 'react-native';
 import { useCallback, useMemo } from 'react';
 import {
   Container,
@@ -40,26 +40,28 @@ const SelectMonth = ({
   }, [setDate, date]);
 
   return (
-    <Container>
-      <Content>
-        <Body>
-          <Title>Selecionar mês</Title>
-          <Select>
-            <Button onPress={handlePreviousMonth}>
-              <Icon name="chevron-left" />
-            </Button>
-            <Month>{dateFormatted}</Month>
-            <Button onPress={handleNextMonth}>
-              <Icon name="chevron-right" />
-            </Button>
-          </Select>
-        </Body>
+    <TouchableWithoutFeedback onPress={onRequestClose}>
+      <Container>
+        <Content>
+          <Body>
+            <Title>Selecionar mês</Title>
+            <Select>
+              <Button onPress={handlePreviousMonth}>
+                <Icon name="chevron-left" />
+              </Button>
+              <Month>{dateFormatted}</Month>
+              <Button onPress={handleNextMonth}>
+                <Icon name="chevron-right" />
+              </Button>
+            </Select>
+          </Body>
 
-        <CloseButton onPress={onRequestClose}>
-          <Icon name="chevrons-down" />
-        </CloseButton>
-      </Content>
-    </Container>
+          <CloseButton onPress={onRequestClose}>
+            <Icon name="chevrons-down" />
+          </CloseButton>
+        </Content>
+      </Container>
+    </TouchableWithoutFeedback>
   );
 };
 
