@@ -45,7 +45,9 @@ import {
   Form,
   ForgotPasswordContainer,
   ForgotPasswordButtonText,
+  Row,
   CreateNewAccountText,
+  CreateNewAccountTextEmphasized,
 } from './styles';
 
 type SigninScreenProps = NativeStackNavigationProp<
@@ -131,7 +133,9 @@ const Signin = (): JSX.Element => {
           <Body>
             <SocialSigninContainer>
               <SocialSigninLabel>
-                Entrar com umas das seguintes opções
+                {Platform.OS === 'ios'
+                  ? 'Entrar com umas das seguintes opções'
+                  : 'Entrar com o google'}
               </SocialSigninLabel>
               <SocialSigninWrapper platform={Platform.OS}>
                 <ButtonSignin
@@ -191,7 +195,9 @@ const Signin = (): JSX.Element => {
 
               <Spacer size={16} />
               <ForgotPasswordContainer>
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => navigate('SendForgotPasswordEmail')}
+                >
                   <ForgotPasswordButtonText>
                     Esqueci minha senha
                   </ForgotPasswordButtonText>
@@ -206,11 +212,16 @@ const Signin = (): JSX.Element => {
                 Log in
               </Button>
               <Spacer size={32} />
-              <TouchableOpacity onPress={() => navigate('Signup')}>
+              <Row>
                 <CreateNewAccountText>
-                  Novo no gofinances? Crie sua conta
+                  Novo no gofinances?{' '}
                 </CreateNewAccountText>
-              </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigate('Signup')}>
+                  <CreateNewAccountTextEmphasized>
+                    Crie sua conta
+                  </CreateNewAccountTextEmphasized>
+                </TouchableOpacity>
+              </Row>
             </Footer>
           </Body>
         </Scroll>

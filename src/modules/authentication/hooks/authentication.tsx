@@ -14,6 +14,7 @@ import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
   signOut,
+  sendPasswordResetEmail,
 } from 'firebase/auth';
 import { auth, database } from '@shared/services/firebase';
 
@@ -48,6 +49,10 @@ type SignUpProps = {
   photo?: string;
 };
 
+type SendPasswordResetEmail = {
+  email: string;
+};
+
 type AuthenticationContextData = {
   persistedLoading: boolean;
   user: User;
@@ -56,6 +61,7 @@ type AuthenticationContextData = {
   signInWithApple(): Promise<void>;
   signInWithCredentials(props: SignInWithCredentialsProps): Promise<void>;
   signOutUser(): Promise<void>;
+  sendResetPasswordEmail(data: SendPasswordResetEmail): Promise<void>;
 };
 
 type Type = 'success' | 'dismiss';
@@ -263,6 +269,22 @@ const AuthenticationProvider = ({
     [],
   );
 
+  const sendResetPasswordEmail = useCallback(
+    async ({ email }: SendPasswordResetEmail) => {
+      try {
+        await sendPasswordResetEmail(auth, email);
+
+        alert({
+          type: 'info',
+          message: 'Enviamos uma caixa postal para o email fornecido',
+        });
+      } catch (error) {
+        throw new Error(error as string);
+      }
+    },
+    [alert],
+  );
+
   useEffect(() => {
     const loadPersistedAuth = async () => {
       try {
@@ -305,6 +327,7 @@ const AuthenticationProvider = ({
         signInWithApple,
         signInWithCredentials,
         signOutUser,
+        sendResetPasswordEmail,
       }}
     >
       {children}

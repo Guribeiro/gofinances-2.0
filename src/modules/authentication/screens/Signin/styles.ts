@@ -99,6 +99,18 @@ export const ForgotPasswordButtonText = styled(Text)`
 
 export const CreateNewAccountText = styled(Text)`
   font-family: ${({ theme }) => theme.palett.fonts.regular};
-
   text-align: center;
+`;
+
+export const Row = styled.View`
+  flex-direction: row;
+  text-align: center;
+  justify-content: center;
+`;
+
+export const CreateNewAccountTextEmphasized = styled(Text)`
+  font-family: ${({ theme }) => theme.palett.fonts.regular};
+  text-align: center;
+  border-bottom-width: 1px;
+  border-bottom-color: ${({ theme }) => theme.palett.colors.secondary};
 `;

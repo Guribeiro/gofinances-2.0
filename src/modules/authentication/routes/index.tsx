@@ -6,6 +6,7 @@ import Welcome from '../screens/Welcome';
 import Signin from '../screens/Signin';
 import Signup from '../screens/Signup';
 import DefinePassword from '../screens/DefinePassword';
+import SendForgotPasswordEmail from '../screens/SendForgotPasswordEmail';
 
 export type DefinePasswordScreenParamsList = {
   name: string;
@@ -16,6 +17,7 @@ export type RootAuthenticationParamsList = {
   Welcome: undefined;
   Signin: undefined;
   Signup: undefined;
+  SendForgotPasswordEmail: undefined;
   DefinePassword: DefinePasswordScreenParamsList;
 };
 
@@ -41,6 +43,11 @@ const AuthenticationRoutes = (): JSX.Element => {
       <Screen name="Signup" component={Signup} />
 
       <Screen name="DefinePassword" component={DefinePassword} />
+
+      <Screen
+        name="SendForgotPasswordEmail"
+        component={SendForgotPasswordEmail}
+      />
     </Navigator>
   );
 };
