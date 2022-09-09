@@ -4,6 +4,7 @@ import { DrawerActions, useNavigation } from '@react-navigation/native';
 
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { RootMainParamsList } from '@modules/transactions/routes';
+import NotFound from '@shared/components/NotFound';
 
 import HighlightCard from '@modules/transactions/components/HighlightCard';
 import TransactionCard, {
@@ -96,11 +97,15 @@ const Dashboard = (): JSX.Element => {
           </OpenCalendarButton>
         </OpenCalendar>
         <Title>Listagem</Title>
-        <TransactionList
-          data={transactions}
-          renderItem={({ item }) => <TransactionCard data={item} />}
-          keyExtractor={item => item.id}
-        />
+        {transactions.length ? (
+          <TransactionList
+            data={transactions}
+            renderItem={({ item }) => <TransactionCard data={item} />}
+            keyExtractor={item => item.id}
+          />
+        ) : (
+          <NotFound />
+        )}
       </Transactions>
     </Container>
   );
