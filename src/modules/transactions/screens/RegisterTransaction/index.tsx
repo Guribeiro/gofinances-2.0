@@ -75,9 +75,16 @@ const RegisterTransaction = (): JSX.Element => {
       name: '',
       amount: '',
     });
+    setValue('amount', '');
     setCategorySelected({} as Category);
     setTransactionType('');
   }, [reset]);
+
+  const handleSelectCategory = useCallback((category: Category) => {
+    setCategorySelected(prev =>
+      prev.key === category.key ? ({} as Category) : category,
+    );
+  }, []);
 
   const onSubmit = useCallback(
     async ({ name, amount }: FormData) => {
@@ -176,6 +183,7 @@ const RegisterTransaction = (): JSX.Element => {
                   }}
                   value={value}
                   error={error}
+                  defaultValue={value}
                 />
               )}
             />
@@ -205,7 +213,7 @@ const RegisterTransaction = (): JSX.Element => {
         >
           <CategorySelect
             onClose={closeCategorySelectModal}
-            setCategory={setCategorySelected}
+            setCategory={handleSelectCategory}
             category={categorySelected}
           />
         </Animated.View>
